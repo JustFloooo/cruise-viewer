@@ -320,7 +320,7 @@ export function App() {
   }
 
   function handleTimelineWheel(event: React.WheelEvent<HTMLDivElement>) {
-    if (event.ctrlKey || event.metaKey) {
+    if (event.altKey) {
       event.preventDefault();
       adjustTimelineZoom(event.deltaY < 0 ? timelineZoomStep : -timelineZoomStep);
       return;
@@ -647,7 +647,7 @@ export function App() {
               <span>{formatDisplayDate(selectedDate)}</span>
             </div>
             {workspaceMode === "timeline" ? (
-              <div className="timeline-zoom-control" aria-label="Timeline zoom">
+              <div className="timeline-zoom-control" aria-label="Timeline zoom" title="Alt + mouse wheel zooms the timeline">
                 <button
                   type="button"
                   onClick={() => adjustTimelineZoom(-timelineZoomStep)}
