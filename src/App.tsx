@@ -46,6 +46,27 @@ function monthKey(day: number): string {
   return fromUtcDay(day).slice(0, 7);
 }
 
+function monthStart(day: number): number {
+  const date = new Date(day * 24 * 60 * 60 * 1000);
+  return toUtcDay(new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1)));
+}
+
+function addMonths(day: number, amount: number): number {
+  const date = new Date(day * 24 * 60 * 60 * 1000);
+  return toUtcDay(new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + amount, 1)));
+}
+
+function monthLabel(day: number): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    month: "short",
+    year: "2-digit",
+  }).format(new Date(`${fromUtcDay(day)}T00:00:00Z`));
+}
+
+function percentBetween(day: number, rangeStart: number, rangeEnd: number): number {
+  return ((day - rangeStart) / Math.max(1, rangeEnd - rangeStart)) * 100;
+}
+
 function areaWindowLength(areaWindow: ShipAreaWindow): number {
   return toUtcDay(areaWindow.end) - toUtcDay(areaWindow.start);
 }
@@ -117,6 +138,24 @@ export function App() {
   const deploymentsByTripCode = useMemo(() => {
     return new Map(deployments.map((deployment) => [deployment.tripCode, deployment]));
   }, []);
+
+  const timelineMonths = useMemo(() => {
+    const months = [];
+    for (let day = monthStart(startDay); day <= endDay; day = addMonths(day, 1)) {
+      months.push({
+        key: fromUtcDay(day),
+        label: monthLabel(day),
+        startDay: day,
+        endDay: Math.min(addMonths(day, 1) - 1, endDay),
+      });
+    }
+    return months;
+  }, []);
+
+  const timelineStart = timelineMonths[0]?.startDay ?? startDay;
+  const timelineEnd = endDay;
+  const timelineWidth = Math.max(980, timelineMonths.length * 92);
+  const selectedDayOffset = percentBetween(selectedDay, timelineStart, timelineEnd);
 
   useEffect(() => {
     if (!isPlaying) return undefined;
@@ -199,6 +238,17 @@ export function App() {
     setSelectedShipId((current) => (current === ship.id ? undefined : ship.id));
     const activeShip = activeShips.find((candidate) => candidate.ship.id === ship.id);
     if (activeShip) setSelectedAreaId(activeShip.area.id);
+    setExploreMode("ships");
+  }
+
+  function selectAreaWindow(areaWindow: ShipAreaWindow) {
+    const windowStart = toUtcDay(areaWindow.start);
+    const windowEnd = toUtcDay(areaWindow.end);
+    const focusedDay = Math.min(windowEnd, Math.max(windowStart, selectedDay));
+
+    setSelectedShipId(areaWindow.shipId);
+    setSelectedAreaId(areaWindow.areaId);
+    setSelectedDay(focusedDay);
     setExploreMode("ships");
   }
 
@@ -444,12 +494,140 @@ export function App() {
         </div>
       </aside>
 
-      <section className="map-workspace" aria-label="Cruise region map">
-        <CruiseMap
-          areaGroups={areaGroups}
-          selectedAreaId={selectedAreaGroup?.area.id}
-          onAreaSelect={selectArea}
-        />
+      <section className="map-workspace" aria-label="Cruise atlas workspace">
+        <section className="timeline-workspace" aria-label="Fleet area timeline">
+          <header className="timeline-header">
+            <div>
+              <span className="eyebrow">Fleet Timeline</span>
+              <h2>Area windows</h2>
+              <p>Scan the fleet by month, then click a block to inspect that ship and region.</p>
+            </div>
+            <div className="timeline-date-chip">
+              <CalendarDays size={15} />
+              <span>{formatDisplayDate(selectedDate)}</span>
+            </div>
+          </header>
+
+          <div className="area-legend" aria-label="Area legend">
+            {cruiseAreas.map((area) => (
+              <button
+                key={area.id}
+                type="button"
+                aria-pressed={selectedAreaGroup?.area.id === area.id}
+                onClick={() => selectArea(area.id)}
+                style={{ "--area-color": area.color } as React.CSSProperties}
+              >
+                <span />
+                {area.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="timeline-frame">
+            <div
+              className="timeline-grid"
+              style={{ "--timeline-width": `${timelineWidth}px` } as React.CSSProperties}
+            >
+              <div className="timeline-row timeline-month-row">
+                <div className="timeline-ship-cell timeline-corner">Ship</div>
+                <div className="timeline-track">
+                  {timelineMonths.map((month) => (
+                    <div
+                      key={month.key}
+                      className="timeline-month"
+                      style={{
+                        left: `${percentBetween(month.startDay, timelineStart, timelineEnd)}%`,
+                        width: `${percentBetween(month.endDay + 1, timelineStart, timelineEnd) -
+                          percentBetween(month.startDay, timelineStart, timelineEnd)}%`,
+                      }}
+                    >
+                      {month.label}
+                    </div>
+                  ))}
+                  <span className="timeline-now" style={{ left: `${selectedDayOffset}%` }} />
+                </div>
+              </div>
+
+              {ships.map((ship) => {
+                const rowWindows = sortedByStart(shipAreaWindows).filter((areaWindow) => areaWindow.shipId === ship.id);
+                const activeShip = activeShips.find((candidate) => candidate.ship.id === ship.id);
+                return (
+                  <div
+                    key={ship.id}
+                    className="timeline-row"
+                    data-selected={selectedShipId === ship.id}
+                  >
+                    <button
+                      type="button"
+                      className="timeline-ship-cell timeline-ship-button"
+                      onClick={() => selectShip(ship)}
+                    >
+                      <strong>{ship.name}</strong>
+                      <small>{activeShip?.area.label ?? "No active window"}</small>
+                    </button>
+                    <div className="timeline-track">
+                      {timelineMonths.map((month) => (
+                        <span
+                          key={`${ship.id}-${month.key}`}
+                          className="timeline-month-line"
+                          style={{ left: `${percentBetween(month.startDay, timelineStart, timelineEnd)}%` }}
+                        />
+                      ))}
+                      <span className="timeline-now" style={{ left: `${selectedDayOffset}%` }} />
+                      {rowWindows.map((areaWindow) => {
+                        const area = areaForWindow(areaWindow);
+                        const windowStart = Math.max(timelineStart, toUtcDay(areaWindow.start));
+                        const windowEnd = Math.min(timelineEnd, toUtcDay(areaWindow.end));
+                        if (windowEnd < timelineStart || windowStart > timelineEnd) return null;
+                        const sourceDeployment = areaWindow.sourceTripCodes
+                          .map((tripCode) => deploymentsByTripCode.get(tripCode))
+                          .find(Boolean);
+                        const isActive = dateInDeployment(selectedDate, areaWindow);
+
+                        return (
+                          <button
+                            key={areaWindow.id}
+                            type="button"
+                            className="timeline-segment"
+                            data-status={areaWindow.status}
+                            data-active={isActive}
+                            title={`${ship.name}: ${area.label}, ${compactDate(areaWindow.start)} - ${compactDate(
+                              areaWindow.end,
+                            )} (${statusLabel(areaWindow.status)})`}
+                            onClick={() => selectAreaWindow(areaWindow)}
+                            style={{
+                              "--area-color": area.color,
+                              left: `${percentBetween(windowStart, timelineStart, timelineEnd)}%`,
+                              width: `${Math.max(
+                                0.65,
+                                percentBetween(windowEnd + 1, timelineStart, timelineEnd) -
+                                  percentBetween(windowStart, timelineStart, timelineEnd),
+                              )}%`,
+                            } as React.CSSProperties}
+                          >
+                            <span>{area.label}</span>
+                            <small>
+                              {statusLabel(areaWindow.status)}
+                              {sourceDeployment ? ` · ${areaWindow.sourceTripCodes.length}` : ""}
+                            </small>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="map-preview" aria-label="Cruise region map">
+          <CruiseMap
+            areaGroups={areaGroups}
+            selectedAreaId={selectedAreaGroup?.area.id}
+            onAreaSelect={selectArea}
+          />
+        </section>
       </section>
     </main>
   );

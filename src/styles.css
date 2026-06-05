@@ -66,11 +66,29 @@ a {
   min-width: 0;
   height: 100%;
   position: relative;
+  display: grid;
+  grid-template-rows: minmax(340px, 58%) minmax(260px, 42%);
+  background: #eef4f2;
 }
 
 .map {
   width: 100%;
   height: 100%;
+}
+
+.timeline-workspace {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(247, 250, 249, 0.94)),
+    #eef4f2;
+}
+
+.map-preview {
+  min-height: 0;
 }
 
 .leaflet-container {
@@ -243,7 +261,8 @@ h1 {
 }
 
 .panel-intro h2,
-.focus-heading h2 {
+.focus-heading h2,
+.timeline-header h2 {
   margin-top: 4px;
   font-size: 21px;
   line-height: 1.15;
@@ -542,6 +561,259 @@ h1 {
   line-height: 1.15;
 }
 
+.timeline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px 12px;
+  border-bottom: 1px solid rgba(20, 36, 44, 0.08);
+}
+
+.timeline-header p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.timeline-date-chip {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  color: #344850;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.area-legend {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(20, 36, 44, 0.08);
+}
+
+.area-legend button {
+  --area-color: #008f95;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #344850;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.area-legend button[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--area-color), white 32%);
+  background: #fff;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--area-color), white 58%);
+}
+
+.area-legend span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--area-color);
+}
+
+.timeline-frame {
+  min-height: 0;
+  overflow: auto;
+  padding-bottom: 4px;
+}
+
+.timeline-grid {
+  --timeline-width: 1600px;
+  min-width: calc(156px + var(--timeline-width));
+}
+
+.timeline-row {
+  display: grid;
+  grid-template-columns: 156px var(--timeline-width);
+  min-height: 54px;
+  border-bottom: 1px solid rgba(20, 36, 44, 0.08);
+}
+
+.timeline-row[data-selected="true"] .timeline-ship-cell,
+.timeline-row[data-selected="true"] .timeline-track {
+  background-color: rgba(255, 255, 255, 0.82);
+}
+
+.timeline-month-row {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  min-height: 34px;
+  background: rgba(247, 250, 249, 0.98);
+}
+
+.timeline-ship-cell {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  border: 0;
+  border-right: 1px solid rgba(20, 36, 44, 0.1);
+  background: rgba(247, 250, 249, 0.98);
+  color: var(--ink);
+  text-align: left;
+}
+
+.timeline-corner {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.timeline-ship-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 12px 8px 14px;
+  cursor: pointer;
+}
+
+.timeline-ship-button strong,
+.timeline-ship-button small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline-ship-button strong {
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 950;
+}
+
+.timeline-ship-button small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.timeline-track {
+  position: relative;
+  background:
+    linear-gradient(90deg, rgba(20, 36, 44, 0.035) 1px, transparent 1px),
+    rgba(255, 255, 255, 0.36);
+  background-size: calc(var(--timeline-width) / 12) 100%;
+}
+
+.timeline-month {
+  position: absolute;
+  inset-block: 0;
+  border-left: 1px solid rgba(20, 36, 44, 0.14);
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  color: #48606a;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.timeline-month-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(20, 36, 44, 0.08);
+}
+
+.timeline-now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  z-index: 5;
+  background: #10343a;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.82);
+  pointer-events: none;
+}
+
+.timeline-segment {
+  --area-color: #008f95;
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  z-index: 2;
+  min-width: 16px;
+  border: 1px solid color-mix(in srgb, var(--area-color), black 10%);
+  border-radius: 7px;
+  background: var(--area-color);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 4px 7px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 7px 16px rgba(15, 36, 44, 0.12);
+}
+
+.timeline-segment[data-active="true"] {
+  outline: 2px solid #10343a;
+  outline-offset: 2px;
+  z-index: 4;
+}
+
+.timeline-segment[data-status="sold-out"] {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--area-color), black 4%) 0 8px,
+      color-mix(in srgb, var(--area-color), white 14%) 8px 16px
+    );
+}
+
+.timeline-segment[data-status="transfer"],
+.timeline-segment[data-status="inferred-gap"] {
+  color: #21363f;
+  border-style: dashed;
+  background: color-mix(in srgb, var(--area-color), white 72%);
+}
+
+.timeline-segment span,
+.timeline-segment small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.1;
+}
+
+.timeline-segment span {
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.timeline-segment small {
+  margin-top: 2px;
+  font-size: 9px;
+  font-weight: 850;
+  opacity: 0.88;
+}
+
 @media (max-width: 980px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -556,6 +828,7 @@ h1 {
 
   .map-workspace {
     order: 1;
+    grid-template-rows: minmax(310px, 62%) minmax(190px, 38%);
   }
 
   .panel-scroll {
@@ -583,5 +856,27 @@ h1 {
 
   .fleet-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .timeline-header {
+    display: block;
+    padding: 14px 14px 10px;
+  }
+
+  .timeline-date-chip {
+    margin-top: 10px;
+  }
+
+  .area-legend {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .timeline-row {
+    grid-template-columns: 132px var(--timeline-width);
+  }
+
+  .timeline-grid {
+    min-width: calc(132px + var(--timeline-width));
   }
 }
