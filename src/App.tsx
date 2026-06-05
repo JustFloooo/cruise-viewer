@@ -9,6 +9,8 @@ import {
   Play,
   Search,
   ShipWheel,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 import { CruiseMap, type ActiveShip, type AreaGroup } from "./components/CruiseMap";
 import {
@@ -34,6 +36,9 @@ import {
 const startDay = toUtcDay(viewerWindow.start);
 const endDay = toUtcDay(viewerWindow.end);
 const defaultDay = toUtcDay("2026-11-17");
+const minTimelineZoom = 0.72;
+const maxTimelineZoom = 2.4;
+const timelineZoomStep = 0.18;
 
 const dateAnchors = [
   { label: "Jun 2026", date: "2026-06-15" },
@@ -72,6 +77,10 @@ function monthLabel(day: number): string {
 
 function percentBetween(day: number, rangeStart: number, rangeEnd: number): number {
   return ((day - rangeStart) / Math.max(1, rangeEnd - rangeStart)) * 100;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 function areaWindowLength(areaWindow: ShipAreaWindow): number {
@@ -207,6 +216,7 @@ export function App() {
   const [selectedShipId, setSelectedShipId] = useState<string | undefined>();
   const [exploreMode, setExploreMode] = useState<"regions" | "ships">("regions");
   const [workspaceMode, setWorkspaceMode] = useState<"timeline" | "map">("timeline");
+  const [timelineZoom, setTimelineZoom] = useState(1);
 
   const selectedDate = fromUtcDay(selectedDay);
 
@@ -229,7 +239,7 @@ export function App() {
 
   const timelineStart = timelineMonths[0]?.startDay ?? startDay;
   const timelineEnd = endDay;
-  const timelineWidth = Math.max(980, timelineMonths.length * 92);
+  const timelineWidth = Math.max(980, Math.round(timelineMonths.length * 92 * timelineZoom));
   const selectedDayOffset = percentBetween(selectedDay, timelineStart, timelineEnd);
 
   useEffect(() => {
@@ -303,6 +313,23 @@ export function App() {
 
   function shiftDate(days: number) {
     setSelectedDay((day) => Math.min(endDay, Math.max(startDay, day + days)));
+  }
+
+  function adjustTimelineZoom(amount: number) {
+    setTimelineZoom((zoom) => Number(clamp(zoom + amount, minTimelineZoom, maxTimelineZoom).toFixed(2)));
+  }
+
+  function handleTimelineWheel(event: React.WheelEvent<HTMLDivElement>) {
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      adjustTimelineZoom(event.deltaY < 0 ? timelineZoomStep : -timelineZoomStep);
+      return;
+    }
+
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+      event.preventDefault();
+      event.currentTarget.scrollLeft += event.deltaY;
+    }
   }
 
   function selectArea(areaId: string) {
@@ -619,6 +646,27 @@ export function App() {
               <CalendarDays size={15} />
               <span>{formatDisplayDate(selectedDate)}</span>
             </div>
+            {workspaceMode === "timeline" ? (
+              <div className="timeline-zoom-control" aria-label="Timeline zoom">
+                <button
+                  type="button"
+                  onClick={() => adjustTimelineZoom(-timelineZoomStep)}
+                  disabled={timelineZoom <= minTimelineZoom}
+                  aria-label="Zoom timeline out"
+                >
+                  <ZoomOut size={15} />
+                </button>
+                <span>{Math.round(timelineZoom * 100)}%</span>
+                <button
+                  type="button"
+                  onClick={() => adjustTimelineZoom(timelineZoomStep)}
+                  disabled={timelineZoom >= maxTimelineZoom}
+                  aria-label="Zoom timeline in"
+                >
+                  <ZoomIn size={15} />
+                </button>
+              </div>
+            ) : null}
           </div>
         </header>
 
@@ -650,7 +698,7 @@ export function App() {
             ))}
           </div>
 
-          <div className="timeline-frame">
+          <div className="timeline-frame" onWheel={handleTimelineWheel}>
             <div
               className="timeline-grid"
               style={{ "--timeline-width": `${timelineWidth}px` } as React.CSSProperties}
