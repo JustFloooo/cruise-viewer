@@ -843,11 +843,29 @@ h1 {
     );
 }
 
+.timeline-segment[data-status="short-trip"],
 .timeline-segment[data-status="transfer"],
 .timeline-segment[data-status="inferred-gap"] {
   color: #21363f;
   border-style: dashed;
   background: color-mix(in srgb, var(--area-color), white 72%);
+}
+
+.timeline-segment[data-status="short-trip"] {
+  opacity: 0.78;
+}
+
+.timeline-segment[data-status="short-sequence"] {
+  color: #2f3f46;
+  border-color: rgba(20, 36, 44, 0.2);
+  border-style: dashed;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(123, 135, 144, 0.17) 0 8px,
+      rgba(255, 255, 255, 0.72) 8px 16px
+    );
+  box-shadow: none;
 }
 
 .timeline-segment span,

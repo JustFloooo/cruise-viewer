@@ -6,6 +6,7 @@ const outputPath = new URL("../src/data/generated/tuiAreaWindows.json", import.m
 const dayMs = 24 * 60 * 60 * 1000;
 const maxSameAreaGapDays = 60;
 const maxTransferGapDays = 45;
+const minSeasonalWindowDays = 42;
 
 const areas = [
   { id: "south-europe-med", prefix: "MM" },
@@ -108,12 +109,13 @@ function officialWindowsForShip(shipCode, trips, searchStart, searchEnd) {
 
     const best = bestEvidenceForDay(evidence);
     const sourceTripCodes = [...best.sourceTripCodes].sort();
-    const status = best.soldOutCount === best.totalCount ? "sold-out" : "bookable";
+    const isSoldOutDay = best.soldOutCount === best.totalCount;
 
-    if (current && current.areaId === best.areaId && current.status === status) {
+    if (current && current.areaId === best.areaId) {
       current.endDay = day;
       for (const tripCode of sourceTripCodes) current.sourceTripCodes.add(tripCode);
       current.evidenceDays += 1;
+      if (isSoldOutDay) current.soldOutEvidenceDays += 1;
       continue;
     }
 
@@ -123,15 +125,42 @@ function officialWindowsForShip(shipCode, trips, searchStart, searchEnd) {
       areaId: best.areaId,
       startDay: day,
       endDay: day,
-      status,
       confidence: 1,
       evidenceDays: 1,
+      soldOutEvidenceDays: isSoldOutDay ? 1 : 0,
       sourceTripCodes: new Set(sourceTripCodes),
     };
   }
 
   if (current) windows.push(current);
   return windows;
+}
+
+function windowDays(window) {
+  return window.endDay - window.startDay + 1;
+}
+
+function tagShortExcursions(windows) {
+  return windows.map((window, index) => {
+    const previous = windows[index - 1];
+    const next = windows[index + 1];
+    const isShortDifferentArea =
+      windowDays(window) < minSeasonalWindowDays &&
+      previous &&
+      next &&
+      previous.areaId !== window.areaId &&
+      next.areaId !== window.areaId;
+
+    if (!isShortDifferentArea) return window;
+
+    return {
+      ...window,
+      status: "short-trip",
+      confidence: 0.58,
+      previousAreaId: previous.areaId,
+      nextAreaId: next.areaId,
+    };
+  });
 }
 
 function inferredGapWindows(previous, next) {
@@ -206,13 +235,16 @@ function enrichGaps(windows) {
 }
 
 function compactWindow(window, index) {
+  const officialStatus =
+    window.status ?? (window.soldOutEvidenceDays === window.evidenceDays ? "sold-out" : "bookable");
+
   return {
     id: `${window.shipCode}-${String(index + 1).padStart(3, "0")}`,
     shipCode: window.shipCode,
     areaId: window.areaId,
     start: fromUtcDay(window.startDay),
     end: fromUtcDay(window.endDay),
-    status: window.status,
+    status: officialStatus,
     confidence: Number(window.confidence.toFixed(2)),
     evidenceDays: window.evidenceDays,
     sourceTripCodes: [...window.sourceTripCodes].sort(),
@@ -229,7 +261,7 @@ const windows = [];
 
 for (const [shipCode, trips] of [...tripsByShip.entries()].sort(([a], [b]) => a.localeCompare(b))) {
   const officialWindows = officialWindowsForShip(shipCode, trips, searchStart, searchEnd);
-  const shipWindows = enrichGaps(officialWindows).map(compactWindow);
+  const shipWindows = enrichGaps(tagShortExcursions(officialWindows)).map(compactWindow);
   windows.push(...shipWindows);
 }
 
@@ -238,9 +270,10 @@ const output = {
   generatedAt: new Date().toISOString(),
   method: {
     description:
-      "Daily trip evidence is classified into broad TUI booking areas, compressed into ship-area windows, and short gaps are inferred automatically.",
+      "Daily trip evidence is classified into broad TUI booking areas, compressed into ship-area windows, short destination excursions are tagged, and short gaps are inferred automatically.",
     maxSameAreaGapDays,
     maxTransferGapDays,
+    minSeasonalWindowDays,
   },
   search: generated.search,
   windowCount: windows.length,

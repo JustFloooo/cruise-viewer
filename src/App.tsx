@@ -114,8 +114,69 @@ function compactDate(value: string): string {
 function statusLabel(status: ShipAreaWindow["status"]): string {
   if (status === "bookable") return "booking evidence";
   if (status === "sold-out") return "sold out";
+  if (status === "short-trip") return "short trip";
   if (status === "transfer") return "transfer";
   return "inferred";
+}
+
+function isMinorWindow(areaWindow: ShipAreaWindow): boolean {
+  return (
+    areaWindow.status === "short-trip" ||
+    areaWindow.status === "transfer" ||
+    areaWindow.status === "inferred-gap"
+  );
+}
+
+type TimelineDisplaySegment =
+  | {
+      type: "area-window";
+      id: string;
+      start: string;
+      end: string;
+      areaWindow: ShipAreaWindow;
+    }
+  | {
+      type: "short-sequence";
+      id: string;
+      start: string;
+      end: string;
+      windows: ShipAreaWindow[];
+    };
+
+function timelineSegmentsForShip(areaWindows: ShipAreaWindow[]): TimelineDisplaySegment[] {
+  const segments: TimelineDisplaySegment[] = [];
+  let minorRun: ShipAreaWindow[] = [];
+
+  function flushMinorRun() {
+    if (!minorRun.length) return;
+    segments.push({
+      type: "short-sequence",
+      id: `${minorRun[0].id}-minor-${minorRun.length}`,
+      start: minorRun[0].start,
+      end: minorRun[minorRun.length - 1].end,
+      windows: minorRun,
+    });
+    minorRun = [];
+  }
+
+  for (const areaWindow of areaWindows) {
+    if (isMinorWindow(areaWindow)) {
+      minorRun.push(areaWindow);
+      continue;
+    }
+
+    flushMinorRun();
+    segments.push({
+      type: "area-window",
+      id: areaWindow.id,
+      start: areaWindow.start,
+      end: areaWindow.end,
+      areaWindow,
+    });
+  }
+
+  flushMinorRun();
+  return segments;
 }
 
 function shipAssignmentForDate(ship: CruiseShip, date: string): ActiveShip | undefined {
@@ -251,6 +312,18 @@ export function App() {
     setSelectedShipId(areaWindow.shipId);
     setSelectedAreaId(areaWindow.areaId);
     setSelectedDay(focusedDay);
+    setExploreMode("ships");
+  }
+
+  function selectShortSequence(ship: CruiseShip, areaWindows: ShipAreaWindow[]) {
+    const firstWindow = areaWindows[0];
+    if (!firstWindow) return;
+    const sequenceStart = toUtcDay(firstWindow.start);
+    const sequenceEnd = toUtcDay(areaWindows[areaWindows.length - 1].end);
+
+    setSelectedShipId(ship.id);
+    setSelectedAreaId(firstWindow.areaId);
+    setSelectedDay(Math.min(sequenceEnd, Math.max(sequenceStart, selectedDay)));
     setExploreMode("ships");
   }
 
@@ -590,6 +663,7 @@ export function App() {
 
               {ships.map((ship) => {
                 const rowWindows = sortedByStart(shipAreaWindows).filter((areaWindow) => areaWindow.shipId === ship.id);
+                const displaySegments = timelineSegmentsForShip(rowWindows);
                 const activeShip = activeShips.find((candidate) => candidate.ship.id === ship.id);
                 return (
                   <div
@@ -614,11 +688,43 @@ export function App() {
                         />
                       ))}
                       <span className="timeline-now" style={{ left: `${selectedDayOffset}%` }} />
-                      {rowWindows.map((areaWindow) => {
-                        const area = areaForWindow(areaWindow);
-                        const windowStart = Math.max(timelineStart, toUtcDay(areaWindow.start));
-                        const windowEnd = Math.min(timelineEnd, toUtcDay(areaWindow.end));
+                      {displaySegments.map((segment) => {
+                        const windowStart = Math.max(timelineStart, toUtcDay(segment.start));
+                        const windowEnd = Math.min(timelineEnd, toUtcDay(segment.end));
                         if (windowEnd < timelineStart || windowStart > timelineEnd) return null;
+
+                        if (segment.type === "short-sequence") {
+                          const isActive = selectedDay >= windowStart && selectedDay <= windowEnd;
+
+                          return (
+                            <button
+                              key={segment.id}
+                              type="button"
+                              className="timeline-segment"
+                              data-status="short-sequence"
+                              data-active={isActive}
+                              title={`${ship.name}: short itinerary sequence, ${compactDate(segment.start)} - ${compactDate(
+                                segment.end,
+                              )}`}
+                              onClick={() => selectShortSequence(ship, segment.windows)}
+                              style={{
+                                "--area-color": "#7b8790",
+                                left: `${percentBetween(windowStart, timelineStart, timelineEnd)}%`,
+                                width: `${Math.max(
+                                  0.65,
+                                  percentBetween(windowEnd + 1, timelineStart, timelineEnd) -
+                                    percentBetween(windowStart, timelineStart, timelineEnd),
+                                )}%`,
+                              } as React.CSSProperties}
+                            >
+                              <span>Short itineraries</span>
+                              <small>{segment.windows.length} windows</small>
+                            </button>
+                          );
+                        }
+
+                        const areaWindow = segment.areaWindow;
+                        const area = areaForWindow(areaWindow);
                         const sourceDeployment = areaWindow.sourceTripCodes
                           .map((tripCode) => deploymentsByTripCode.get(tripCode))
                           .find(Boolean);
@@ -648,7 +754,7 @@ export function App() {
                             <span>{area.label}</span>
                             <small>
                               {statusLabel(areaWindow.status)}
-                              {sourceDeployment ? ` · ${areaWindow.sourceTripCodes.length}` : ""}
+                              {sourceDeployment ? ` - ${areaWindow.sourceTripCodes.length}` : ""}
                             </small>
                           </button>
                         );

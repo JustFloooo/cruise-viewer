@@ -4,7 +4,7 @@ import tuiAreaWindowsData from "./generated/tuiAreaWindows.json";
 export type LatLng = [number, number];
 export type Region = string;
 export type SourceConfidence = "official-search" | "partial-route";
-export type AreaWindowStatus = "bookable" | "sold-out" | "inferred-gap" | "transfer";
+export type AreaWindowStatus = "bookable" | "sold-out" | "short-trip" | "inferred-gap" | "transfer";
 
 export type CruiseArea = {
   id: string;
