@@ -125,12 +125,18 @@ function statusLabel(status: ShipAreaWindow["status"]): string {
   return "inferred";
 }
 
+function shortRouteLabel(deployment: Deployment | undefined, fallback: string): string {
+  if (deployment?.routeName) {
+    return deployment.routeName.replace(/\s+\d+$/, "");
+  }
+
+  if (!deployment?.routeCode) return fallback;
+  const routePrefix = deployment.routeCode.split("_")[1]?.replace(/-/g, " ");
+  return routePrefix ? routePrefix : fallback;
+}
+
 function isMinorWindow(areaWindow: ShipAreaWindow): boolean {
-  return (
-    areaWindow.status === "short-trip" ||
-    areaWindow.status === "transfer" ||
-    areaWindow.status === "inferred-gap"
-  );
+  return areaWindow.status === "transfer" || areaWindow.status === "inferred-gap";
 }
 
 type TimelineDisplaySegment =
@@ -733,12 +739,16 @@ export function App() {
 
                         const areaWindow = segment.areaWindow;
                         const area = areaForWindow(areaWindow);
-                        const sourceDeployment = areaWindow.sourceTripCodes
-                          .map((tripCode) => deploymentsByTripCode.get(tripCode))
-                          .find(Boolean);
-                        const isActive = dateInDeployment(selectedDate, areaWindow);
+                          const sourceDeployment = areaWindow.sourceTripCodes
+                            .map((tripCode) => deploymentsByTripCode.get(tripCode))
+                            .find(Boolean);
+                          const isActive = dateInDeployment(selectedDate, areaWindow);
+                          const segmentLabel =
+                            areaWindow.status === "short-trip"
+                              ? shortRouteLabel(sourceDeployment, area.label)
+                              : area.label;
 
-                        return (
+                          return (
                           <button
                             key={areaWindow.id}
                             type="button"
@@ -758,11 +768,11 @@ export function App() {
                                   percentBetween(windowStart, timelineStart, timelineEnd),
                               )}%`,
                             } as React.CSSProperties}
-                          >
-                            <span>{area.label}</span>
-                            <small>
-                              {statusLabel(areaWindow.status)}
-                              {sourceDeployment ? ` - ${areaWindow.sourceTripCodes.length}` : ""}
+                            >
+                              <span>{segmentLabel}</span>
+                              <small>
+                                {statusLabel(areaWindow.status)}
+                                {sourceDeployment ? ` - ${areaWindow.sourceTripCodes.length}` : ""}
                             </small>
                           </button>
                         );

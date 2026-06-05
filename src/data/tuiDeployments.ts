@@ -31,6 +31,7 @@ export type Deployment = {
   ports: string[];
   tripCode: string;
   routeCode?: string;
+  routeName?: string;
   soldOut?: boolean;
 };
 
@@ -389,6 +390,7 @@ export const deployments: Deployment[] = generated.trips
       id: trip.tripCode,
       tripCode: trip.tripCode,
       routeCode: trip.route?.code,
+      routeName: trip.route?.name,
       shipId: ship?.id ?? trip.shipCode.toLowerCase(),
       areaId: area.id,
       start: trip.dateFrom,
