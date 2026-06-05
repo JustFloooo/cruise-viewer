@@ -43,6 +43,12 @@ const dateAnchors = [
   { label: "Mar 2028", date: "2028-03-15" },
 ];
 
+const northernEuropeBookingAreaIds = new Set(["baltic", "nordland-gb", "western-europe"]);
+
+function bookingAreaIdsFor(areaId: string): Set<string> {
+  return areaId === "northern-europe" ? northernEuropeBookingAreaIds : new Set([areaId]);
+}
+
 function monthKey(day: number): string {
   return fromUtcDay(day).slice(0, 7);
 }
@@ -243,7 +249,8 @@ export function App() {
     return cruiseAreas
       .map((area) => {
         const groupShips = activeShips.filter((activeShip) => activeShip.area.id === area.id);
-        const bookingCount = activeDeployments.filter((deployment) => deployment.areaId === area.id).length;
+        const bookingAreaIds = bookingAreaIdsFor(area.id);
+        const bookingCount = activeDeployments.filter((deployment) => bookingAreaIds.has(deployment.areaId)).length;
         return {
           area,
           ships: groupShips,
@@ -280,8 +287,9 @@ export function App() {
   const selectedAreaBookings = useMemo(() => {
     if (!selectedAreaGroup) return [];
     const maxDay = selectedDay + 90;
+    const bookingAreaIds = bookingAreaIdsFor(selectedAreaGroup.area.id);
     return sortedByStart(deployments)
-      .filter((deployment) => deployment.areaId === selectedAreaGroup.area.id)
+      .filter((deployment) => bookingAreaIds.has(deployment.areaId))
       .filter((deployment) => toUtcDay(deployment.end) >= selectedDay)
       .filter((deployment) => toUtcDay(deployment.start) <= maxDay)
       .slice(0, 8);

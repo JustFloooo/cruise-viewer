@@ -130,6 +130,13 @@ const generatedAreaWindows = tuiAreaWindowsData as GeneratedAreaWindowsData;
 
 export const cruiseAreas: CruiseArea[] = [
   {
+    id: "northern-europe",
+    prefix: "NE",
+    label: "Nordeuropa",
+    center: [56.2, 9.8],
+    color: "#546f7a",
+  },
+  {
     id: "south-europe-med",
     prefix: "MM",
     label: "Südeuropa & Mittelmeer",

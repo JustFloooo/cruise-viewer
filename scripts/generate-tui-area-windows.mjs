@@ -9,6 +9,7 @@ const maxTransferGapDays = 45;
 const minSeasonalWindowDays = 42;
 
 const areas = [
+  { id: "northern-europe", prefix: "NE" },
   { id: "south-europe-med", prefix: "MM" },
   { id: "western-europe", prefix: "WE" },
   { id: "south-africa", prefix: "SA" },
@@ -22,6 +23,8 @@ const areas = [
 ];
 
 const areaByPrefix = new Map(areas.map((area) => [area.prefix, area]));
+const northHomePorts = new Set(["Bremerhaven", "Hamburg", "Kiel", "Rostock-Warnemünde"]);
+const northOrbitPrefixes = new Set(["NL", "OB", "WE"]);
 
 function toUtcDay(value) {
   const date = new Date(`${value}T00:00:00Z`);
@@ -36,8 +39,21 @@ function routePrefix(trip) {
   return trip.route?.code?.split("_")[0] ?? "";
 }
 
+function firstPort(trip) {
+  return trip.ports?.[0] ?? trip.stages?.find((stage) => stage.name !== "Seetag")?.name ?? "";
+}
+
+function lastPort(trip) {
+  return trip.ports?.at(-1) ?? [...(trip.stages ?? [])].reverse().find((stage) => stage.name !== "Seetag")?.name ?? "";
+}
+
 function classifyArea(trip) {
-  const byPrefix = areaByPrefix.get(routePrefix(trip));
+  const prefix = routePrefix(trip);
+  if (northOrbitPrefixes.has(prefix) && northHomePorts.has(firstPort(trip)) && northHomePorts.has(lastPort(trip))) {
+    return "northern-europe";
+  }
+
+  const byPrefix = areaByPrefix.get(prefix);
   if (byPrefix) return byPrefix.id;
 
   const haystack = `${trip.route?.code ?? ""} ${trip.route?.name ?? ""} ${trip.headline} ${(trip.ports ?? []).join(
