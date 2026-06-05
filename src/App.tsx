@@ -4,6 +4,7 @@ import {
   ArrowRight,
   CalendarDays,
   ExternalLink,
+  Map as MapIcon,
   Pause,
   Play,
   Search,
@@ -132,6 +133,7 @@ export function App() {
   const [selectedAreaId, setSelectedAreaId] = useState<string | undefined>();
   const [selectedShipId, setSelectedShipId] = useState<string | undefined>();
   const [exploreMode, setExploreMode] = useState<"regions" | "ships">("regions");
+  const [workspaceMode, setWorkspaceMode] = useState<"timeline" | "map">("timeline");
 
   const selectedDate = fromUtcDay(selectedDay);
 
@@ -494,7 +496,45 @@ export function App() {
         </div>
       </aside>
 
-      <section className="map-workspace" aria-label="Cruise atlas workspace">
+      <section className="map-workspace" data-mode={workspaceMode} aria-label="Cruise atlas workspace">
+        <header className="workspace-header">
+          <div>
+            <span className="eyebrow">{workspaceMode === "timeline" ? "Fleet Timeline" : "Region Map"}</span>
+            <h2>{workspaceMode === "timeline" ? "Area windows" : "Fleet geography"}</h2>
+            <p>
+              {workspaceMode === "timeline"
+                ? "Scan the fleet by month, then click a block to inspect that ship and region."
+                : "Use the map for spatial context around the selected date and active regions."}
+            </p>
+          </div>
+          <div className="workspace-actions">
+            <div className="workspace-switch" role="tablist" aria-label="Workspace view">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={workspaceMode === "timeline"}
+                onClick={() => setWorkspaceMode("timeline")}
+              >
+                <CalendarDays size={15} />
+                Timeline
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={workspaceMode === "map"}
+                onClick={() => setWorkspaceMode("map")}
+              >
+                <MapIcon size={15} />
+                Map
+              </button>
+            </div>
+            <div className="workspace-date-chip">
+              <CalendarDays size={15} />
+              <span>{formatDisplayDate(selectedDate)}</span>
+            </div>
+          </div>
+        </header>
+
         <section className="timeline-workspace" aria-label="Fleet area timeline">
           <header className="timeline-header">
             <div>
@@ -623,6 +663,7 @@ export function App() {
 
         <section className="map-preview" aria-label="Cruise region map">
           <CruiseMap
+            key={workspaceMode}
             areaGroups={areaGroups}
             selectedAreaId={selectedAreaGroup?.area.id}
             onAreaSelect={selectArea}
