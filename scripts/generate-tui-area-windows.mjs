@@ -179,6 +179,36 @@ function tagShortExcursions(windows) {
   });
 }
 
+function mergeSameAreaContinuity(windows) {
+  const merged = [];
+
+  for (const window of windows) {
+    const previous = merged.at(-1);
+    const gapDays = previous ? window.startDay - previous.endDay - 1 : Number.POSITIVE_INFINITY;
+
+    if (previous && previous.areaId === window.areaId && gapDays <= maxSameAreaGapDays) {
+      previous.endDay = window.endDay;
+      previous.evidenceDays += window.evidenceDays;
+      previous.soldOutEvidenceDays += window.soldOutEvidenceDays ?? 0;
+      previous.confidence = Math.min(
+        previous.confidence,
+        window.confidence,
+        Math.max(0.72, 0.94 - gapDays / 300),
+      );
+
+      for (const tripCode of window.sourceTripCodes) previous.sourceTripCodes.add(tripCode);
+      continue;
+    }
+
+    merged.push({
+      ...window,
+      sourceTripCodes: new Set(window.sourceTripCodes),
+    });
+  }
+
+  return merged;
+}
+
 function inferredGapWindows(previous, next) {
   const gapStart = previous.endDay + 1;
   const gapEnd = next.startDay - 1;
@@ -277,7 +307,8 @@ const windows = [];
 
 for (const [shipCode, trips] of [...tripsByShip.entries()].sort(([a], [b]) => a.localeCompare(b))) {
   const officialWindows = officialWindowsForShip(shipCode, trips, searchStart, searchEnd);
-  const shipWindows = enrichGaps(tagShortExcursions(officialWindows)).map(compactWindow);
+  const continuityWindows = mergeSameAreaContinuity(officialWindows);
+  const shipWindows = enrichGaps(tagShortExcursions(continuityWindows)).map(compactWindow);
   windows.push(...shipWindows);
 }
 

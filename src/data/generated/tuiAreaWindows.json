@@ -1,6 +1,6 @@
 {
   "sourceTripFile": "tuiTrips.json",
-  "generatedAt": "2026-06-05T18:16:03.520Z",
+  "generatedAt": "2026-06-05T18:24:39.265Z",
   "method": {
     "description": "Daily trip evidence is classified into broad TUI booking areas, compressed into ship-area windows, short destination excursions are tagged, and short gaps are inferred automatically.",
     "maxSameAreaGapDays": 60,
@@ -28,7 +28,7 @@
     ],
     "locale": "de"
   },
-  "windowCount": 91,
+  "windowCount": 71,
   "windows": [
     {
       "id": "MEINS1-001",
@@ -335,38 +335,13 @@
       "shipCode": "MEINS2",
       "areaId": "northern-europe",
       "start": "2027-05-11",
-      "end": "2027-05-27",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 17,
-      "sourceTripCodes": [
-        "ZWO2718SEE",
-        "ZWO2719SEE"
-      ]
-    },
-    {
-      "id": "MEINS2-008",
-      "shipCode": "MEINS2",
-      "areaId": "northern-europe",
-      "start": "2027-05-28",
-      "end": "2027-05-29",
-      "status": "inferred-gap",
-      "confidence": 0.89,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "northern-europe",
-      "nextAreaId": "northern-europe"
-    },
-    {
-      "id": "MEINS2-009",
-      "shipCode": "MEINS2",
-      "areaId": "northern-europe",
-      "start": "2027-05-30",
       "end": "2027-09-14",
       "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 108,
+      "confidence": 0.93,
+      "evidenceDays": 125,
       "sourceTripCodes": [
+        "ZWO2718SEE",
+        "ZWO2719SEE",
         "ZWO2720SEE",
         "ZWO2721SEE",
         "ZWO2722SEE",
@@ -380,7 +355,7 @@
       ]
     },
     {
-      "id": "MEINS2-010",
+      "id": "MEINS2-008",
       "shipCode": "MEINS2",
       "areaId": "northern-europe",
       "start": "2027-09-15",
@@ -393,7 +368,7 @@
       "nextAreaId": "south-europe-med"
     },
     {
-      "id": "MEINS2-011",
+      "id": "MEINS2-009",
       "shipCode": "MEINS2",
       "areaId": "south-europe-med",
       "start": "2027-09-22",
@@ -406,7 +381,7 @@
       "nextAreaId": "south-europe-med"
     },
     {
-      "id": "MEINS2-012",
+      "id": "MEINS2-010",
       "shipCode": "MEINS2",
       "areaId": "south-europe-med",
       "start": "2027-09-28",
@@ -423,7 +398,7 @@
       "nextAreaId": "western-europe"
     },
     {
-      "id": "MEINS2-013",
+      "id": "MEINS2-011",
       "shipCode": "MEINS2",
       "areaId": "western-europe",
       "start": "2027-10-21",
@@ -438,7 +413,7 @@
       "nextAreaId": "northern-europe"
     },
     {
-      "id": "MEINS2-014",
+      "id": "MEINS2-012",
       "shipCode": "MEINS2",
       "areaId": "northern-europe",
       "start": "2027-10-31",
@@ -467,10 +442,10 @@
       "shipCode": "MEINS3",
       "areaId": "northern-europe",
       "start": "2026-06-09",
-      "end": "2026-09-13",
+      "end": "2026-10-24",
       "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 97,
+      "confidence": 0.9,
+      "evidenceDays": 125,
       "sourceTripCodes": [
         "MSD2614SEE",
         "MSD2615SEE",
@@ -481,39 +456,14 @@
         "MSD2620SEE",
         "MSD2621SEE",
         "MSD2622SEE",
-        "MSD2623SEE"
-      ]
-    },
-    {
-      "id": "MEINS3-002",
-      "shipCode": "MEINS3",
-      "areaId": "northern-europe",
-      "start": "2026-09-14",
-      "end": "2026-09-26",
-      "status": "inferred-gap",
-      "confidence": 0.83,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "northern-europe",
-      "nextAreaId": "northern-europe"
-    },
-    {
-      "id": "MEINS3-003",
-      "shipCode": "MEINS3",
-      "areaId": "northern-europe",
-      "start": "2026-09-27",
-      "end": "2026-10-24",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 28,
-      "sourceTripCodes": [
+        "MSD2623SEE",
         "MSD2626SEE",
         "MSD2627SEE",
         "MSD2628SEE"
       ]
     },
     {
-      "id": "MEINS3-004",
+      "id": "MEINS3-002",
       "shipCode": "MEINS3",
       "areaId": "canaries",
       "start": "2026-10-25",
@@ -528,7 +478,7 @@
       "nextAreaId": "northern-europe"
     },
     {
-      "id": "MEINS3-005",
+      "id": "MEINS3-003",
       "shipCode": "MEINS3",
       "areaId": "northern-europe",
       "start": "2026-11-15",
@@ -549,7 +499,7 @@
       "nextAreaId": "canaries"
     },
     {
-      "id": "MEINS3-006",
+      "id": "MEINS3-004",
       "shipCode": "MEINS3",
       "areaId": "canaries",
       "start": "2026-12-24",
@@ -564,7 +514,7 @@
       "nextAreaId": "central-america-caribbean"
     },
     {
-      "id": "MEINS3-007",
+      "id": "MEINS3-005",
       "shipCode": "MEINS3",
       "areaId": "central-america-caribbean",
       "start": "2027-01-11",
@@ -579,7 +529,7 @@
       "nextAreaId": "northern-europe"
     },
     {
-      "id": "MEINS3-008",
+      "id": "MEINS3-006",
       "shipCode": "MEINS3",
       "areaId": "northern-europe",
       "start": "2027-02-15",
@@ -608,7 +558,7 @@
       ]
     },
     {
-      "id": "MEINS3-009",
+      "id": "MEINS3-007",
       "shipCode": "MEINS3",
       "areaId": "western-europe",
       "start": "2027-08-28",
@@ -623,74 +573,24 @@
       "nextAreaId": "south-europe-med"
     },
     {
-      "id": "MEINS3-010",
+      "id": "MEINS3-008",
       "shipCode": "MEINS3",
       "areaId": "south-europe-med",
       "start": "2027-09-06",
-      "end": "2027-09-15",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 10,
-      "sourceTripCodes": [
-        "MSD2720SEE"
-      ]
-    },
-    {
-      "id": "MEINS3-011",
-      "shipCode": "MEINS3",
-      "areaId": "south-europe-med",
-      "start": "2027-09-16",
-      "end": "2027-09-22",
-      "status": "inferred-gap",
-      "confidence": 0.86,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "south-europe-med",
-      "nextAreaId": "south-europe-med"
-    },
-    {
-      "id": "MEINS3-012",
-      "shipCode": "MEINS3",
-      "areaId": "south-europe-med",
-      "start": "2027-09-23",
-      "end": "2027-09-30",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 8,
-      "sourceTripCodes": [
-        "MSD2722SEE"
-      ]
-    },
-    {
-      "id": "MEINS3-013",
-      "shipCode": "MEINS3",
-      "areaId": "south-europe-med",
-      "start": "2027-10-01",
-      "end": "2027-10-07",
-      "status": "inferred-gap",
-      "confidence": 0.86,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "south-europe-med",
-      "nextAreaId": "south-europe-med"
-    },
-    {
-      "id": "MEINS3-014",
-      "shipCode": "MEINS3",
-      "areaId": "south-europe-med",
-      "start": "2027-10-08",
       "end": "2027-10-21",
       "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 14,
+      "confidence": 0.92,
+      "evidenceDays": 32,
       "sourceTripCodes": [
+        "MSD2720SEE",
+        "MSD2722SEE",
         "MSD272526SEE",
         "MSD2725SEE",
         "MSD2726SEE"
       ]
     },
     {
-      "id": "MEINS3-015",
+      "id": "MEINS3-009",
       "shipCode": "MEINS3",
       "areaId": "central-america-caribbean",
       "start": "2027-10-22",
@@ -732,10 +632,10 @@
       "shipCode": "MEINS4",
       "areaId": "south-europe-med",
       "start": "2026-06-07",
-      "end": "2026-10-21",
+      "end": "2027-10-25",
       "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 137,
+      "confidence": 0.91,
+      "evidenceDays": 494,
       "sourceTripCodes": [
         "MSV263637SEE",
         "MSV2636SEE",
@@ -771,32 +671,7 @@
         "MSV265253SEE",
         "MSV2652SEE",
         "MSV2653SEE",
-        "MSV2654SEE"
-      ]
-    },
-    {
-      "id": "MEINS4-002",
-      "shipCode": "MEINS4",
-      "areaId": "south-europe-med",
-      "start": "2026-10-22",
-      "end": "2026-10-24",
-      "status": "inferred-gap",
-      "confidence": 0.89,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "south-europe-med",
-      "nextAreaId": "south-europe-med"
-    },
-    {
-      "id": "MEINS4-003",
-      "shipCode": "MEINS4",
-      "areaId": "south-europe-med",
-      "start": "2026-10-25",
-      "end": "2027-04-11",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 169,
-      "sourceTripCodes": [
+        "MSV2654SEE",
         "MSV265657SEE",
         "MSV2656SEE",
         "MSV265758SEE",
@@ -831,32 +706,7 @@
         "MSV2712SEE",
         "MSV271314SEE",
         "MSV2713SEE",
-        "MSV2714SEE"
-      ]
-    },
-    {
-      "id": "MEINS4-004",
-      "shipCode": "MEINS4",
-      "areaId": "south-europe-med",
-      "start": "2027-04-12",
-      "end": "2027-04-20",
-      "status": "inferred-gap",
-      "confidence": 0.85,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "south-europe-med",
-      "nextAreaId": "south-europe-med"
-    },
-    {
-      "id": "MEINS4-005",
-      "shipCode": "MEINS4",
-      "areaId": "south-europe-med",
-      "start": "2027-04-21",
-      "end": "2027-10-25",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 188,
-      "sourceTripCodes": [
+        "MSV2714SEE",
         "MSV2717SEE",
         "MSV2718SEE",
         "MSV2719SEE",
@@ -907,7 +757,7 @@
       ]
     },
     {
-      "id": "MEINS4-006",
+      "id": "MEINS4-002",
       "shipCode": "MEINS4",
       "areaId": "central-america-caribbean",
       "start": "2027-10-26",
@@ -1205,42 +1055,17 @@
       "shipCode": "MEINS6",
       "areaId": "asia",
       "start": "2026-12-23",
-      "end": "2027-03-02",
+      "end": "2027-05-12",
       "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 70,
+      "confidence": 0.9,
+      "evidenceDays": 128,
       "sourceTripCodes": [
         "MSS2633SEE",
         "MSS2634SEE",
         "MSS2701SEE",
         "MSS2702SEE",
         "MSS2703SEE",
-        "MSS2704SEE"
-      ]
-    },
-    {
-      "id": "MEINS6-005",
-      "shipCode": "MEINS6",
-      "areaId": "asia",
-      "start": "2027-03-03",
-      "end": "2027-03-15",
-      "status": "inferred-gap",
-      "confidence": 0.83,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "asia",
-      "nextAreaId": "asia"
-    },
-    {
-      "id": "MEINS6-006",
-      "shipCode": "MEINS6",
-      "areaId": "asia",
-      "start": "2027-03-16",
-      "end": "2027-05-12",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 58,
-      "sourceTripCodes": [
+        "MSS2704SEE",
         "MSS2706SEE",
         "MSS2707SEE",
         "MSS270810SEE",
@@ -1251,7 +1076,7 @@
       ]
     },
     {
-      "id": "MEINS6-007",
+      "id": "MEINS6-005",
       "shipCode": "MEINS6",
       "areaId": "south-africa",
       "start": "2027-05-13",
@@ -1270,7 +1095,7 @@
       ]
     },
     {
-      "id": "MEINS6-008",
+      "id": "MEINS6-006",
       "shipCode": "MEINS6",
       "areaId": "western-europe",
       "start": "2027-07-09",
@@ -1294,7 +1119,7 @@
       ]
     },
     {
-      "id": "MEINS6-009",
+      "id": "MEINS6-007",
       "shipCode": "MEINS6",
       "areaId": "western-europe",
       "start": "2027-08-31",
@@ -1307,7 +1132,7 @@
       "nextAreaId": "northern-europe"
     },
     {
-      "id": "MEINS6-010",
+      "id": "MEINS6-008",
       "shipCode": "MEINS6",
       "areaId": "northern-europe",
       "start": "2027-09-05",
@@ -1320,7 +1145,7 @@
       "nextAreaId": "northern-europe"
     },
     {
-      "id": "MEINS6-011",
+      "id": "MEINS6-009",
       "shipCode": "MEINS6",
       "areaId": "northern-europe",
       "start": "2027-09-09",
@@ -1341,7 +1166,7 @@
       "nextAreaId": "western-europe"
     },
     {
-      "id": "MEINS6-012",
+      "id": "MEINS6-010",
       "shipCode": "MEINS6",
       "areaId": "western-europe",
       "start": "2027-10-09",
@@ -1356,7 +1181,7 @@
       "nextAreaId": "south-africa"
     },
     {
-      "id": "MEINS6-013",
+      "id": "MEINS6-011",
       "shipCode": "MEINS6",
       "areaId": "south-africa",
       "start": "2027-10-18",
@@ -1371,7 +1196,7 @@
       ]
     },
     {
-      "id": "MEINS6-014",
+      "id": "MEINS6-012",
       "shipCode": "MEINS6",
       "areaId": "asia",
       "start": "2027-12-01",
@@ -1522,10 +1347,10 @@
       "shipCode": "MEINS7",
       "areaId": "northern-europe",
       "start": "2027-04-29",
-      "end": "2027-10-03",
+      "end": "2027-10-31",
       "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 158,
+      "confidence": 0.92,
+      "evidenceDays": 180,
       "sourceTripCodes": [
         "MSI2716SEE",
         "MSI2717SEE",
@@ -1544,39 +1369,14 @@
         "MSI2730SEE",
         "MSI2731SEE",
         "MSI2732SEE",
-        "MSI2733SEE"
-      ]
-    },
-    {
-      "id": "MEINS7-007",
-      "shipCode": "MEINS7",
-      "areaId": "northern-europe",
-      "start": "2027-10-04",
-      "end": "2027-10-09",
-      "status": "inferred-gap",
-      "confidence": 0.87,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "northern-europe",
-      "nextAreaId": "northern-europe"
-    },
-    {
-      "id": "MEINS7-008",
-      "shipCode": "MEINS7",
-      "areaId": "northern-europe",
-      "start": "2027-10-10",
-      "end": "2027-10-31",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 22,
-      "sourceTripCodes": [
+        "MSI2733SEE",
         "MSI2735SEE",
         "MSI2736SEE",
         "MSI2737SEE"
       ]
     },
     {
-      "id": "MEINS7-009",
+      "id": "MEINS7-007",
       "shipCode": "MEINS7",
       "areaId": "western-europe",
       "start": "2027-11-01",
@@ -1591,7 +1391,7 @@
       "nextAreaId": "canaries"
     },
     {
-      "id": "MEINS7-010",
+      "id": "MEINS7-008",
       "shipCode": "MEINS7",
       "areaId": "canaries",
       "start": "2027-11-11",
@@ -1643,7 +1443,7 @@
       ]
     },
     {
-      "id": "MEINS7-011",
+      "id": "MEINS7-009",
       "shipCode": "MEINS7",
       "areaId": "south-europe-med",
       "start": "2028-04-09",
@@ -1793,10 +1593,10 @@
       "shipCode": "MEINSF",
       "areaId": "south-europe-med",
       "start": "2027-03-09",
-      "end": "2027-09-17",
+      "end": "2027-10-06",
       "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 193,
+      "confidence": 0.91,
+      "evidenceDays": 204,
       "sourceTripCodes": [
         "MSN273334SEE",
         "MSN273435SEE",
@@ -1824,6 +1624,8 @@
         "MSN275657SEE",
         "MSN275758SEE",
         "MSN275859SEE",
+        "MSN276162SEE",
+        "MSN2762SEE",
         "MSN278182SEE",
         "MSN278283SEE",
         "MSN278384SEE",
@@ -1842,33 +1644,6 @@
         "MSN279697SEE",
         "MSN279798SEE",
         "MSN279833SEE"
-      ]
-    },
-    {
-      "id": "MEINSF-008",
-      "shipCode": "MEINSF",
-      "areaId": "south-europe-med",
-      "start": "2027-09-18",
-      "end": "2027-09-25",
-      "status": "inferred-gap",
-      "confidence": 0.86,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "south-europe-med",
-      "nextAreaId": "south-europe-med"
-    },
-    {
-      "id": "MEINSF-009",
-      "shipCode": "MEINSF",
-      "areaId": "south-europe-med",
-      "start": "2027-09-26",
-      "end": "2027-10-06",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 11,
-      "sourceTripCodes": [
-        "MSN276162SEE",
-        "MSN2762SEE"
       ]
     },
     {
@@ -1998,10 +1773,10 @@
       "shipCode": "MEINSR",
       "areaId": "northern-europe",
       "start": "2027-05-06",
-      "end": "2027-06-24",
+      "end": "2027-10-19",
       "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 50,
+      "confidence": 0.93,
+      "evidenceDays": 165,
       "sourceTripCodes": [
         "MSA2735SEE",
         "MSA2736SEE",
@@ -2010,32 +1785,7 @@
         "MSA2739SEE",
         "MSA2740SEE",
         "MSA2741SEE",
-        "MSA2742SEE"
-      ]
-    },
-    {
-      "id": "MEINSR-006",
-      "shipCode": "MEINSR",
-      "areaId": "northern-europe",
-      "start": "2027-06-25",
-      "end": "2027-06-26",
-      "status": "inferred-gap",
-      "confidence": 0.89,
-      "evidenceDays": 0,
-      "sourceTripCodes": [],
-      "previousAreaId": "northern-europe",
-      "nextAreaId": "northern-europe"
-    },
-    {
-      "id": "MEINSR-007",
-      "shipCode": "MEINSR",
-      "areaId": "northern-europe",
-      "start": "2027-06-27",
-      "end": "2027-10-19",
-      "status": "bookable",
-      "confidence": 1,
-      "evidenceDays": 115,
-      "sourceTripCodes": [
+        "MSA2742SEE",
         "MSA2744SEE",
         "MSA2745SEE",
         "MSA2746SEE",
@@ -2052,7 +1802,7 @@
       ]
     },
     {
-      "id": "MEINSR-008",
+      "id": "MEINSR-006",
       "shipCode": "MEINSR",
       "areaId": "western-europe",
       "start": "2027-10-20",
@@ -2068,7 +1818,7 @@
       "nextAreaId": "canaries"
     },
     {
-      "id": "MEINSR-009",
+      "id": "MEINSR-007",
       "shipCode": "MEINSR",
       "areaId": "canaries",
       "start": "2027-10-30",
@@ -2128,7 +1878,7 @@
       ]
     },
     {
-      "id": "MEINSR-010",
+      "id": "MEINSR-008",
       "shipCode": "MEINSR",
       "areaId": "western-europe",
       "start": "2028-04-23",
