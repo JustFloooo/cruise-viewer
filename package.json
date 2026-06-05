@@ -17,7 +17,7 @@
     "mein-schiff"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "description": "Interactive cruise ship area viewer prototype for Mein Schiff / TUI Cruises.",
   "dependencies": {
     "@vitejs/plugin-react": "^6.0.2",
