@@ -53,9 +53,14 @@ export function RegionExplorer({
               <span className="eyebrow">Selected Region</span>
               <h2>{selectedAreaGroup.area.label}</h2>
               <p>
-                {selectedAreaGroup.ships
-                  .map(({ ship, status }) => `${ship.name}${status !== "bookable" ? ` (${statusLabel(status)})` : ""}`)
-                  .join(", ")}
+                {selectedAreaGroup.ships.length
+                  ? selectedAreaGroup.ships
+                      .map(
+                        ({ ship, status }) =>
+                          `${ship.name}${status !== "bookable" ? ` (${statusLabel(status)})` : ""}`,
+                      )
+                      .join(", ")
+                  : "No ships in this region on the selected date."}
               </p>
             </div>
             <div className="booking-list">

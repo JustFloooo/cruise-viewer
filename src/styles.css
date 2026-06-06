@@ -537,12 +537,12 @@ h1 {
 }
 
 .atlas-ocean {
-  fill: #ffffff;
+  fill: #f9fbfc;
 }
 
 .atlas-land {
-  fill: #e9edf0;
-  stroke: #d5dbe0;
+  fill: #e7ecef;
+  stroke: #cfd7dc;
   stroke-width: 0.6;
   pointer-events: none;
   vector-effect: non-scaling-stroke;
@@ -550,17 +550,66 @@ h1 {
 
 .atlas-area {
   cursor: pointer;
-  transition: fill-opacity 120ms ease, stroke-opacity 120ms ease;
+}
+
+.atlas-area-fill,
+.atlas-area-pattern {
+  transition: fill-opacity 140ms ease, opacity 140ms ease, stroke-opacity 140ms ease;
+}
+
+.atlas-area-fill {
+  stroke-width: 1.4;
   vector-effect: non-scaling-stroke;
 }
 
-.atlas-ship {
+.atlas-area[data-selected="true"] .atlas-area-fill {
+  stroke-width: 2.1;
+}
+
+.atlas-area-pattern {
   pointer-events: none;
 }
 
-.atlas-ship circle {
+.atlas-area-pattern-line {
+  stroke-width: 1.2;
+}
+
+.atlas-ship {
+  cursor: pointer;
+  pointer-events: auto;
+  outline: none;
+}
+
+.atlas-ship-cluster-line {
+  stroke: rgba(53, 72, 82, 0.34);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.atlas-ship-halo {
+  fill: rgba(255, 255, 255, 0.96);
+  stroke: #354852;
+  stroke-width: 1.7;
+  filter: drop-shadow(0 2px 3px rgba(8, 30, 42, 0.24));
+}
+
+.atlas-ship:hover .atlas-ship-halo,
+.atlas-ship:focus-visible .atlas-ship-halo,
+.atlas-ship[data-selected="true"] .atlas-ship-halo {
+  stroke: #10343a;
+  stroke-width: 2;
+}
+
+.atlas-ship[data-selected="true"] .atlas-ship-halo {
+  fill: rgba(255, 255, 255, 0.98);
+}
+
+.atlas-ship-glyph {
+  fill: #354852;
   stroke: #ffffff;
-  stroke-width: 1.5;
+  stroke-width: 0.65;
+  stroke-linejoin: round;
 }
 
 .atlas-ship text {

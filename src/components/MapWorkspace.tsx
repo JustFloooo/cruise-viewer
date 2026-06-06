@@ -125,7 +125,9 @@ export function MapWorkspace({
         <CruiseMap
           areaGroups={areaGroups}
           selectedAreaId={selectedAreaGroup?.area.id}
+          selectedShipId={selectedShipId}
           onAreaSelect={onSelectArea}
+          onShipSelect={onSelectShip}
         />
       </section>
     </section>

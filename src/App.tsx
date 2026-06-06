@@ -64,28 +64,31 @@ export function App() {
       .sort((a, b) => a!.ship.name.localeCompare(b!.ship.name)) as ActiveShip[];
   }, [selectedDate]);
 
-  const areaGroups = useMemo<AreaGroup[]>(() => {
-    return cruiseAreas
-      .map((area) => {
-        const groupShips = activeShips.filter((activeShip) => activeShip.area.id === area.id);
-        const bookingAreaIds = bookingAreaIdsFor(area.id);
-        const bookingCount = activeDeployments.filter((deployment) => bookingAreaIds.has(deployment.areaId)).length;
-        return {
-          area,
-          ships: groupShips,
-          bookingCount,
-        };
-      })
-      .filter((group) => group.ships.length > 0);
+  const allAreaGroups = useMemo<AreaGroup[]>(() => {
+    return cruiseAreas.map((area) => {
+      const groupShips = activeShips.filter((activeShip) => activeShip.area.id === area.id);
+      const bookingAreaIds = bookingAreaIdsFor(area.id);
+      const bookingCount = activeDeployments.filter((deployment) => bookingAreaIds.has(deployment.areaId)).length;
+      return {
+        area,
+        ships: groupShips,
+        bookingCount,
+      };
+    });
   }, [activeDeployments, activeShips]);
+
+  const activeAreaGroups = useMemo(() => {
+    return allAreaGroups.filter((group) => group.ships.length > 0);
+  }, [allAreaGroups]);
 
   const selectedAreaGroup = useMemo(() => {
     return (
-      areaGroups.find((group) => group.area.id === selectedAreaId) ??
-      areaGroups.find((group) => group.ships.some((activeShip) => activeShip.ship.id === selectedShipId)) ??
-      areaGroups[0]
+      allAreaGroups.find((group) => group.area.id === selectedAreaId) ??
+      allAreaGroups.find((group) => group.ships.some((activeShip) => activeShip.ship.id === selectedShipId)) ??
+      activeAreaGroups[0] ??
+      allAreaGroups[0]
     );
-  }, [areaGroups, selectedAreaId, selectedShipId]);
+  }, [activeAreaGroups, allAreaGroups, selectedAreaId, selectedShipId]);
 
   const selectedShip = ships.find((ship) => ship.id === selectedShipId);
 
@@ -190,7 +193,7 @@ export function App() {
         onSetDay={setSelectedDay}
         exploreMode={exploreMode}
         onSetExploreMode={setExploreMode}
-        areaGroups={areaGroups}
+        areaGroups={activeAreaGroups}
         selectedAreaGroup={selectedAreaGroup}
         selectedAreaBookings={selectedAreaBookings}
         onSelectArea={selectArea}
@@ -211,7 +214,7 @@ export function App() {
         selectedDate={selectedDate}
         selectedShipId={selectedShipId}
         selectedAreaGroup={selectedAreaGroup}
-        areaGroups={areaGroups}
+        areaGroups={activeAreaGroups}
         activeShips={activeShips}
         onWheel={handleTimelineWheel}
         onSelectArea={selectArea}
