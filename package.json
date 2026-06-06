@@ -6,6 +6,8 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
     "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "extract:tui": "node scripts/extract-tui-visible-trips.mjs",
     "fetch:tui": "node scripts/fetch-tui-trips.mjs && node scripts/generate-tui-area-windows.mjs",
     "generate:tui-windows": "node scripts/generate-tui-area-windows.mjs"
@@ -21,17 +23,24 @@
   "description": "Interactive cruise ship area viewer prototype for Mein Schiff / TUI Cruises.",
   "dependencies": {
     "@vitejs/plugin-react": "^6.0.2",
-    "leaflet": "^1.9.4",
+    "d3-geo": "^3.1.1",
+    "d3-selection": "^3.0.0",
+    "d3-zoom": "^3.0.0",
     "lucide-react": "^1.17.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-leaflet": "^5.0.0",
+    "topojson-client": "^3.1.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.0.16",
+    "world-atlas": "^2.0.2"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.9.21",
+    "@types/d3-geo": "^3.1.0",
+    "@types/d3-selection": "^3.0.11",
+    "@types/d3-zoom": "^3.0.8",
     "@types/react": "^19.2.16",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "@types/topojson-client": "^3.1.5",
+    "vitest": "^4.1.8"
   }
 }

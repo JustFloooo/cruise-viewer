@@ -1,4 +1,4 @@
-import type { LatLng } from "./tuiDeployments";
+import type { LatLng } from "./types";
 
 const dayMs = 24 * 60 * 60 * 1000;
 

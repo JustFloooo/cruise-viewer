@@ -17,7 +17,7 @@ Then open the local Vite URL printed by the terminal.
 
 ## Current Data Approach
 
-The generated dataset lives in `src/data/generated/tuiTrips.json` and is adapted for the map by `src/data/tuiDeployments.ts`.
+The generated dataset lives in `src/data/generated/tuiTrips.json` and is adapted for the map by the data layer in `src/data/` (see `src/data/index.ts`).
 
 Primary source:
 
